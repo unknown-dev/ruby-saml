@@ -24,7 +24,7 @@ module Onelogin
         raise ArgumentError.new("Response cannot be nil") if response.nil?
         @options  = options
         @response = (response =~ /^</) ? response : Base64.decode64(response)
-        @document = XMLSecurity::SignedDocument.new(@response)
+        @document = XMLSecurity::SignedDocument.new(@response, @errors)
       end
 
       def is_valid?
@@ -134,9 +134,9 @@ module Onelogin
           @xml = Nokogiri::XML(self.document.to_s)
         end
         if soft
-          @schema.validate(@xml).map{ return false }
+          @schema.validate(@xml).map{ @errors << "Schema validation failed"; return false }
         else
-          @schema.validate(@xml).map{ |error| validation_error("#{error.message}\n\n#{@xml.to_s}") }
+          @schema.validate(@xml).map{ |error| @errors << "#{error.message}\n\n#{@xml.to_s}"; validation_error("#{error.message}\n\n#{@xml.to_s}") }
         end
       end
 
