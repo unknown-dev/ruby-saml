@@ -40,12 +40,24 @@ module Onelogin
           name_id.text = settings.name_identifier_format
         end
         if settings.assertion_consumer_service_url != nil
-          sp_sso.add_element "md:AssertionConsumerService", {
+          sp_serv = sp_sso.add_element "md:AssertionConsumerService", {
               # Add this as a setting to create different bindings?
               "Binding" => "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST",
               "Location" => settings.assertion_consumer_service_url,
               "isDefault" => true,
               "index" => 0
+          }
+          sp_serv.add_element "md:RequestedAttribute",{
+            "isRequired"=>true,
+            "NameFormat"=>"urn:oasis:names:tc:SAML:2.0:attrname-format:uri"
+            "Name"=>"first_name"
+            "FriendlyName"=>"first_name"
+          }
+          sp_serv.add_element "md:RequestedAttribute",{
+            "isRequired"=>true,
+            "NameFormat"=>"urn:oasis:names:tc:SAML:2.0:attrname-format:uri"
+            "Name"=>"last_name"
+            "FriendlyName"=>"last_name"
           }
         end
         # With OpenSSO, it might be required to also include
