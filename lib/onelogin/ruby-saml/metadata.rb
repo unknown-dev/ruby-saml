@@ -49,14 +49,14 @@ module Onelogin
           }
           sp_serv.add_element "md:RequestedAttribute",{
             "isRequired"=>true,
-            "NameFormat"=>"urn:oasis:names:tc:SAML:2.0:attrname-format:uri"
-            "Name"=>"first_name"
+            "NameFormat"=>"urn:oasis:names:tc:SAML:2.0:attrname-format:uri",
+            "Name"=>"first_name",
             "FriendlyName"=>"first_name"
           }
           sp_serv.add_element "md:RequestedAttribute",{
             "isRequired"=>true,
-            "NameFormat"=>"urn:oasis:names:tc:SAML:2.0:attrname-format:uri"
-            "Name"=>"last_name"
+            "NameFormat"=>"urn:oasis:names:tc:SAML:2.0:attrname-format:uri",
+            "Name"=>"last_name",
             "FriendlyName"=>"last_name"
           }
         end
