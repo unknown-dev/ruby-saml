@@ -78,7 +78,7 @@ module Onelogin
           parse_time(node, "SessionNotOnOrAfter")
         end
       end
-      
+
       # Checks the status of the response for a "Success" code
       def success?
         @status_code ||= begin
@@ -118,8 +118,18 @@ module Onelogin
         validate_structure(soft)      &&
         validate_response_state(soft) &&
         validate_conditions(soft)     &&
-        document.validate(get_fingerprint, soft) && 
+        validate_signature(soft) &&
         success?
+      end
+
+      def validate_signature(soft=true)
+        if cert_element = REXML::XPath.first(document, "//ds:X509Certificate", { "ds"=>DSIG })
+          document.validate(get_fingerprint, soft)
+        else
+          cert = OpenSSL::X509::Certificate.new(settings.idp_cert)
+          document.validate_doc(Base64.encode64(cert.to_der).gsub(/\n/, ""), soft)
+        end
+
       end
 
       def validate_structure(soft = true)
